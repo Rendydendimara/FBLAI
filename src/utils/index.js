@@ -19,7 +19,7 @@ const getSheetsNameByCallNumber = (callNumber) => {
     case 9:
       return ["KONKORDANSI"]
     case 10:
-      return []
+      return ["Altutang"]
     case 11:
       return ["ENSIKLOPEDI"]
     case 12:
@@ -29,7 +29,18 @@ const getSheetsNameByCallNumber = (callNumber) => {
   }
 }
 
-module.exports = {getSheetsNameByCallNumber}
+function compareSameString(strA,strB){
+    for(var result = 0, i = strA.length; i--;){
+        if(typeof strB[i] == 'undefined' || strA[i] == strB[i]);
+        else if(strA[i].toLowerCase() == strB[i].toLowerCase())
+            result++;
+        else
+            result += 4;
+    }
+    return 1 - (result + 4*Math.abs(strA.length - strB.length))/(2*(strA.length+strB.length));
+}
+
+module.exports = {getSheetsNameByCallNumber, compareSameString}
 
 // - Alkitab/PB disatukan 1 Subject (Alkitab Non LAI)
 // - Majalah dan Buletin dijadikan 1 Subject (Majalah dan Buletin Non LAI)

@@ -5,7 +5,7 @@ require('dotenv').config()
 const { stringify } = require("csv-stringify");
 const AdmZip = require("adm-zip");
 const xlsx = require('node-xlsx').default;
-const { getSheetsNameByCallNumber } = require('../utils')
+const { getSheetsNameByCallNumber, compareSameString } = require('../utils')
 
 const FOLDER_RESULT = "results"
 const COLUMNS_CSV = [
@@ -46,7 +46,8 @@ const PostFileUseCase = async (
     prepare(filename);
     const resultReadCVS = await readFile(`./${req.file.path}`, CALL_NUMBER);
     console.log(`total result read data in ${filename}: `, resultReadCVS.length)
-    const resultFetchBooks = await fetchBooks(resultReadCVS.slice(2, 10), filename)
+    // const resultFetchBooks = await fetchBooks(resultReadCVS.slice(2, 10), filename)
+    const resultFetchBooks = await fetchBooks(resultReadCVS, filename)
     await delay(2000);
     await createCSVImport(resultFetchBooks.resultDataSuccess, filename, "found", CALL_NUMBER)
     await delay(2000);
@@ -82,7 +83,7 @@ const readFile = (path, callNumber) => new Promise((resolve, reject) => {
     .on("data", async function (row) {
       if (row[3] !== 'Judul Buku' && row[3] !== '') {
         // console.log('row', row)
-        console.log('row[3]', row[3])
+        // console.log('row[3]', row[3])
         const isbn = getFixISBN(row[1]);
         dataReader.push({
           isbn: isbn,
@@ -202,7 +203,19 @@ const createCSVImport = (data, filename, type, callNumber) => new Promise(async 
     const writableStream = fs.createWriteStream(filenameResult);
     const stringifier = stringify({ header: true, columns: COLUMNS_CSV });
     for (let j = 0; j < data.length; j++) {
-      const fetchData = data[j].dataFetch.items[0]
+      // Looping untuk mencari items mana yang judul buku mendekati dengan yang dicari
+      let percent = 0;
+      let indexHigh = 0;
+      const defaultTitle = data[j].defaultData[3].trim()
+      for(let k=0;k<data[j].dataFetch.items.length;k++) {
+        let tempPercent = compareSameString(defaultTitle, data[j].dataFetch.items[k].volumeInfo.title)
+        if(tempPercent > percent) {
+          percent = tempPercent
+          indexHigh = k
+        }
+      }
+      console.log('indeks buku diambil ke-',indexHigh)
+      const fetchData = data[j].dataFetch.items[indexHigh]
       const originalData = data[j].defaultData
       let authorsFix = ""
 

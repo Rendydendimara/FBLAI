@@ -35,7 +35,7 @@ export default function Login({ onSuccessLogin }) {
     setLoading(true);
     if (
       loginForm.password === 'Password' &&
-      loginForm.username === 'Jusus4ever'
+      loginForm.username === 'Jesus4ever'
     ) {
       onSuccessLogin();
     } else {
@@ -63,7 +63,7 @@ export default function Login({ onSuccessLogin }) {
   };
 
   return (
-    <Flex bg='teal' minH={'100vh'} align={'center'} justify={'center'}>
+    <Flex minH={'100vh'} align={'center'} justify={'center'}>
       <Stack
         borderRadius='10px'
         boxShadow='lg'
@@ -77,7 +77,7 @@ export default function Login({ onSuccessLogin }) {
         justifyContent='center'
       >
         <Stack align={'center'}>
-          <Heading fontSize={'4xl'}> Login</Heading>
+          <Heading fontSize={'4xl'}> Login | FBLAI</Heading>
         </Stack>
         <Box
           rounded={'lg'}

@@ -12,6 +12,8 @@ import {
 } from '@chakra-ui/react';
 import React, { useState } from 'react';
 import { ApiPost } from '../api';
+import { FaCloudDownloadAlt } from 'react-icons/fa';
+import { BiReset } from 'react-icons/bi';
 
 export default function MainApp() {
   const { toast } = createStandaloneToast();
@@ -70,8 +72,16 @@ export default function MainApp() {
     setLoading(false);
   };
 
+  const onReset = () => {
+    setLinkDownload('');
+    setForm({
+      subject: '',
+      file: undefined,
+    });
+  };
+
   return (
-    <Flex bg='teal' minH={'100vh'} align={'center'} justify={'center'}>
+    <Flex minH={'100vh'} align={'center'} justify={'center'}>
       <Box w='50%' p='20' borderRadius='10px' boxShadow='lg' bg='white'>
         <Heading textAlign='center' as='h1'>
           Find Books LAI Tools
@@ -127,10 +137,23 @@ export default function MainApp() {
               mengunduh hasil{' '}
             </Text>
             <a href={linkDownload} target='_blank'>
-              <Button w='full' colorScheme='green'>
+              <Button
+                w='full'
+                rightIcon={<FaCloudDownloadAlt />}
+                colorScheme='green'
+              >
                 Download File
               </Button>
             </a>
+            <Button
+              w='full'
+              onClick={onReset}
+              mt='4'
+              rightIcon={<BiReset color='white' />}
+              colorScheme='yellow'
+            >
+              Reset
+            </Button>
           </Box>
         )}
       </Box>

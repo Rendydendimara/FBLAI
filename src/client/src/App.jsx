@@ -12,7 +12,12 @@ function App() {
   };
 
   return (
-    <Box>
+    <Box
+      backgroundPosition='center'
+      backgroundSize='cover'
+      backgroundRepeat='no-repeat'
+      backgroundImage='url(/images/slide2.jpg)'
+    >
       {content === 'login' ? (
         <Login onSuccessLogin={onSuccessLogin} />
       ) : (
