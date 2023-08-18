@@ -70,11 +70,18 @@ app.use(helmet());
 app.use('/api', mainRouter);
 
 // 404
-app.use(express.static(path.join(__dirname, '/client/build')));
+// app.use(express.static(path.join(__dirname, '/client/build')));
 
 // 404
+// app.get('*', (req, res) => {
+//   res.sendFile(path.join(`${__dirname}/client/build/index.html`));
+// });
 app.get('*', (req, res) => {
-  res.sendFile(path.join(`${__dirname}/client/build/index.html`));
+  res.status(404).send({
+    success: false,
+    data: null,
+    message: 'Page Not found',
+  });
 });
 
 // error handler
