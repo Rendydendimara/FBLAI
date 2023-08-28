@@ -48,11 +48,11 @@ const PostFileUseCase = async (
     console.log(`total result read data in ${filename}: `, resultReadCVS.length)
     // const resultFetchBooks = await fetchBooks(resultReadCVS.slice(2, 10), filename)
     const resultFetchBooks = await fetchBooks(resultReadCVS, filename)
-    await delay(2000);
+    await delay(5000);
     await createCSVImport(resultFetchBooks.resultDataSuccess, filename, "found", CALL_NUMBER)
-    await delay(2000);
+    await delay(5000);
     await createCSVImport(resultFetchBooks.resultDataError, filename, "notFound", CALL_NUMBER)
-    await delay(2000);
+    await delay(5000);
     await createZipArchive(pathZip, `${FOLDER_RESULT}/${filename}`)
     console.timeEnd('running fetch');
 
@@ -127,8 +127,8 @@ const fetchBooks = (data, folderName) => new Promise(async (resolve, reject) => 
   const resultDataSuccess = []
   const resultDataError = []
   for (i = 0; i < data.length; i++) {
+    console.log('cari ', data[i].isbn)
     if (data[i].isbn) {
-      // console.log(`find isbn: ${data[i].isbn}`)
       try {
         const res = await axios(`https://www.googleapis.com/books/v1/volumes?q=isbn:${data[i].isbn}`);
         if (res.status === 200 && res.data.totalItems > 0) {
@@ -145,7 +145,10 @@ const fetchBooks = (data, folderName) => new Promise(async (resolve, reject) => 
       } catch (err) {
         console.log(err)
       }
+    } else {
+      resultDataError.push({ isbn: data[i].isbn, defaultIsbn: data[i].defaultIsbn, dataFetch: null, defaultData: data[i].defaultData });
     }
+
   }
   resolve({
     resultDataSuccess,
@@ -207,14 +210,14 @@ const createCSVImport = (data, filename, type, callNumber) => new Promise(async 
       let percent = 0;
       let indexHigh = 0;
       const defaultTitle = data[j].defaultData[3].trim()
-      for(let k=0;k<data[j].dataFetch.items.length;k++) {
+      for (let k = 0; k < data[j].dataFetch.items.length; k++) {
         let tempPercent = compareSameString(defaultTitle, data[j].dataFetch.items[k].volumeInfo.title)
-        if(tempPercent > percent) {
+        if (tempPercent > percent) {
           percent = tempPercent
           indexHigh = k
         }
       }
-      console.log('indeks buku diambil ke-',indexHigh)
+      console.log('indeks buku diambil ke-', indexHigh)
       const fetchData = data[j].dataFetch.items[indexHigh]
       const originalData = data[j].defaultData
       let authorsFix = ""
