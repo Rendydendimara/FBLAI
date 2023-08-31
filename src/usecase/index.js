@@ -171,10 +171,12 @@ const createCSVImport = (data, filename, type, callNumber) => new Promise(async 
     const stringifier = stringify({ header: true, columns: COLUMNS_CSV });
     for (let j = 0; j < data.length; j++) {
       let authorsFix = ""
-      const dataAuthors = [data[j].defaultData[12].trim()]
+      const dataAuthors = [data[j].defaultData[11].trim()]
 
       dataAuthors.forEach((dt) => {
-        authorsFix += `<${dt}>`;
+        if (dt.length > 1) {
+          authorsFix += `<${dt}>`;
+        }
       })
 
       const result = [
@@ -182,8 +184,8 @@ const createCSVImport = (data, filename, type, callNumber) => new Promise(async 
         "Text", //gmdId
         null, // edition
         data[j].isbn, // isbnIssn
-        data[j].defaultData[11].trim(), // publisherName
-        data[j].defaultData[14], // publishYear
+        data[j].defaultData[12].trim(), // publisherName
+        data[j].defaultData[13], // publishYear
         "-", // collation
         null, // seriesTitle
         callNumber, // callNumber
@@ -193,7 +195,7 @@ const createCSVImport = (data, filename, type, callNumber) => new Promise(async 
         "-", //notes
         "nof-found.png", // image
         "-", // NO DATA
-        dataAuthors, // authors
+        authorsFix, // authors
         `<${data[j].defaultData[5].trim()}>`, // subjects
       ];
       // arrayDataToDump.push(data)
@@ -225,7 +227,9 @@ const createCSVImport = (data, filename, type, callNumber) => new Promise(async 
       const dataAuthors = fetchData.volumeInfo.authors ? fetchData.volumeInfo.authors : [data[j].defaultData[12].trim()]
 
       dataAuthors.forEach((dt) => {
-        authorsFix += `<${dt}>`;
+        if (dt.length > 1) {
+          authorsFix += `<${dt}>`;
+        }
       })
       const result = [
         data[j].defaultData[3].trim(), // title

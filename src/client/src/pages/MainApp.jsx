@@ -107,6 +107,7 @@ export default function MainApp() {
               <option value={10}>Altutang</option>
               <option value={11}>Encyclopedia</option>
               <option value={12}>Kamus</option>
+              <option value={13}>Teologi dan Tafsiran</option>
             </Select>
           </FormControl>
           <FormControl my='5' isRequired>
